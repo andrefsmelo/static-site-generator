@@ -2,12 +2,12 @@ from enum import Enum
 from htmlnode import LeafNode
 
 class TextType(Enum):
-    TEXT = "text"
-    BOLD = "bold"
-    ITALIC = "italic"
+    TEXT = None
+    BOLD = "b"
+    ITALIC = "i"
     CODE = "code"
-    LINK = "link"
-    IMAGE = "image"
+    LINK = "a"
+    IMAGE = "img"
 
 class TextNode:
     def __init__(self, text, text_type, url=None):
@@ -28,15 +28,18 @@ class TextNode:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
 def text_node_to_html_node(text_node):
-    if text_node.text_type == TextType.TEXT:
-        return LeafNode(tag = None, value = text_node.text)
-    if text_node.text_type == TextType.BOLD:
-        return LeafNode(tag = "b", value = text_node.text)
-    if text_node.text_type == TextType.ITALIC:
-        return LeafNode(tag = "i", value = text_node.text)
-    if text_node.text_type == TextType.CODE:
-        return LeafNode(tag = "code", value = text_node.text)
-    if text_node.text_type == TextType.LINK:
-        return LeafNode(tag = "a", value = text_node.text, props={"href": text_node.url})
-    if text_node.text_type == TextType.IMAGE:
-        return LeafNode(tag = "img", value = "", props={"src": text_node.url, "alt": text_node.text})
+    match text_node.text_type:
+        case TextType.TEXT:
+            return LeafNode(tag = TextType.TEXT.value, value = text_node.text)
+        case TextType.BOLD:
+            return LeafNode(tag = TextType.BOLD.value, value = text_node.text)
+        case TextType.ITALIC:
+            return LeafNode(tag = TextType.ITALIC.value, value = text_node.text)
+        case TextType.CODE:
+            return LeafNode(tag = TextType.CODE.value, value = text_node.text)
+        case TextType.LINK:
+            return LeafNode(tag = TextType.LINK.value, value = text_node.text, props={"href": text_node.url})
+        case TextType.IMAGE:
+            return LeafNode(tag = TextType.IMAGE.value, value = "", props={"src": text_node.url, "alt": text_node.text})
+        case _:
+            raise Exception(f"Invalid text type: {text_node.text_type}")
