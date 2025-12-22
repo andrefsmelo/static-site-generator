@@ -37,9 +37,12 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(node.to_html(), "Just raw text here")
 
     def test_leaf_to_html_no_value(self):
-        node = LeafNode("p", None)
         with self.assertRaises(ValueError):
-            node.to_html()
+            LeafNode("p", None)
+
+    def test_leaf_to_html_void_element(self):
+        node = LeafNode("img", None, {"src": "image.png", "alt": "test"})
+        self.assertEqual(node.to_html(), '<img src="image.png" alt="test">')
 
     def test_to_html_with_children(self):
         child_node = LeafNode("span", "child")
