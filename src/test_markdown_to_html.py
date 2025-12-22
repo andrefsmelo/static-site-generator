@@ -1,5 +1,5 @@
 import unittest
-from markdown_to_html import markdown_to_html_node
+from markdown_to_html import markdown_to_html_node, extract_title
 
 class TestMarkdownToHTML(unittest.TestCase):
     def test_paragraphs(self):
@@ -59,7 +59,7 @@ the **same** even with inline stuff
         html = node.to_html()
         self.assertEqual(
             html,
-            "<div><blockquote><p>This is a <b>bold</b> quote with <i>italic</i> text and <code>code</code> too</p></blockquote></div>",
+            "<div><blockquote>This is a <b>bold</b> quote with <i>italic</i> text and <code>code</code> too</blockquote></div>",
         )
 
     def test_unordered_list(self):
@@ -117,6 +117,16 @@ the **same** even with inline stuff
             html,
             "<div><h1>Title</h1><p>Some <b>bold</b> text</p><ul><li>list item</li></ul></div>",
         )
+
+    def test_extract_title(self):
+        self.assertEqual(extract_title("# Hello World\n\nContent."), "Hello World")
+        self.assertEqual(extract_title("## Subtitle\n\nContent."), "Subtitle")
+        self.assertEqual(extract_title("#   Spaced Title   \n\nContent."), "Spaced Title")
+        self.assertEqual(extract_title("# First\n\n## Second"), "First")
+        with self.assertRaises(Exception):
+            extract_title("No heading here.")
+        with self.assertRaises(Exception):
+            extract_title("")
 
 
 if __name__ == "__main__":

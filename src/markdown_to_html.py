@@ -24,7 +24,7 @@ def block_to_html_node(block, block_type):
             return ParentNode(tag="pre", children=[ParentNode(tag="code", children=[node])])
         case BlockType.quote:
             content = " ".join(line.lstrip(">").strip() for line in block.split("\n"))
-            return ParentNode(tag="blockquote", children=[ParentNode(tag="p", children=text_to_children(content))])
+            return ParentNode(tag="blockquote", children=text_to_children(content))
         case BlockType.unordered_list:
             items = [ParentNode(tag="li", children=text_to_children(line[2:])) for line in block.split("\n")]
             return ParentNode(tag="ul", children=items)
@@ -40,3 +40,10 @@ def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
     html_nodes = [block_to_html_node(block, block_to_block_type(block)) for block in blocks]
     return ParentNode(tag="div", children=html_nodes)
+
+
+def extract_title(markdown):
+    first_line = markdown.split("\n")[0]
+    if first_line.startswith("#"):
+        return first_line.lstrip("#").strip()
+    raise Exception("Markdown Title not found.")
