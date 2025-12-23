@@ -2,7 +2,7 @@
 
 This is a static site generator built with Python, created as part of the [Boot.dev](https://www.boot.dev) curriculum. It converts a directory of Markdown files into a fully functional static website using a customizable HTML template.
 
-## 🚀 About The Project
+## About The Project
 
 This project was built following the ["Build a Static Site Generator"](https://www.boot.dev/courses/build-static-site-generator-python) course on Boot.dev. The goal of the project is to understand the fundamentals of:
 - Parsing text and Markdown syntax
