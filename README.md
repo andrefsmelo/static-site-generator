@@ -1,62 +1,69 @@
-# Static Site Generator
+# Static Site Generator 
 
-A Python-based static site generator that converts Markdown files into HTML pages.
+This is a static site generator built with Python, created as part of the [Boot.dev](https://www.boot.dev) curriculum. It converts a directory of Markdown files into a fully functional static website using a customizable HTML template.
 
-## Features
+## 🚀 About The Project
 
-- Convert Markdown to HTML
-- Recursive page generation
-- Template-based HTML output
-- Support for common Markdown syntax:
-  - Headings
-  - Bold and italic text
-  - Links and images
-  - Code blocks
-  - Ordered and unordered lists
-  - Blockquotes
+This project was built following the ["Build a Static Site Generator"](https://www.boot.dev/courses/build-static-site-generator-python) course on Boot.dev. The goal of the project is to understand the fundamentals of:
+- Parsing text and Markdown syntax
+- Recursive file processing
+- Object-Oriented Programming in Python
+- HTML generation and templating
 
-## Project Structure
+## ✨ Features
+
+- **Markdown to HTML Conversion**: Supports headings, bold/italic text, links, images, lists, blockquotes, and code blocks.
+- **Recursive Page Generation**: Automatically mirrors the directory structure of your `content/` folder in the output.
+- **Templating**: Wraps generated content in a `template.html` for consistent layout.
+- **Static Asset Management**: Copies CSS and images from `static/` to the public directory.
+
+## 📂 Project Structure
 
 ```
-static-site-generator/
-├── content/           # Markdown source files
+.
+├── content/           # Your Markdown content lives here
 ├── static/            # Static assets (CSS, images)
-├── public/            # Generated HTML output
-├── template.html      # HTML template
-└── src/
-    ├── main.py        # Entry point
-    ├── htmlnode.py    # HTML node classes
-    ├── textnode.py    # Text node handling
-    └── markdown_to_html.py  # Markdown conversion
+├── docs/              # Generated site (output folder)
+├── src/               # Source code
+│   ├── main.py        # Entry point
+│   ├── htmlnode.py    # HTML generation logic
+│   ├── textnode.py    # Intermediate text representation
+│   └── ...
+├── template.html      # Base HTML template
+├── main.sh            # Script for local development
+└── build.sh           # Script for GitHub Pages deployment
 ```
 
-## Usage
+## 🛠️ Usage
 
-### Basic Usage
+### Prerequisites
+
+- Python 3.x
+
+### Running Locally
+
+To generate the site and serve it locally:
 
 ```bash
 ./main.sh
 ```
 
-### With Custom Base Path
+This will build the site into the `docs/` directory and start a local server at `http://localhost:8888`.
+
+### Deploying to GitHub Pages
+
+To build the site with the correct base path for GitHub Pages:
 
 ```bash
-python src/main.py /custom-path/
+./build.sh
 ```
 
-## How It Works
+This script runs the generator with the `/static-site-generator/` base path configuration.
 
-1. Copies static files from `static/` to `public/`
-2. Recursively converts all `.md` files in `content/` to `.html`
-3. Applies `template.html` to each generated page
-4. Serves the site on `http://localhost:8888`
+## 🧪 Running Tests
 
-## Requirements
-
-- Python 3.x
-
-## Running Tests
+To run the unit tests:
 
 ```bash
-python -m unittest discover -s src
+./test.sh
 ```
