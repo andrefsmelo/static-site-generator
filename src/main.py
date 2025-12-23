@@ -1,6 +1,8 @@
 import os
 import shutil
+import sys
 from markdown_to_html import markdown_to_html_node, extract_title
+
 
 def copy_files(source, destination):
     if os.path.exists(destination):
@@ -19,7 +21,8 @@ def copy_files(source, destination):
         else:
             copy_files(source_path, dest_path)
 
-def generate_page(from_path, template_path, dest_path):
+
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, "r") as f:
         markdown = f.read()
@@ -28,6 +31,7 @@ def generate_page(from_path, template_path, dest_path):
     content = markdown_to_html_node(markdown).to_html()
     title = extract_title(markdown)
     html = template.replace("{{ Title }}", title).replace("{{ Content }}", content)
+    html = html.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
     dest_dir = os.path.dirname(dest_path)
     if dest_dir:
         os.makedirs(dest_dir, exist_ok=True)
@@ -35,26 +39,24 @@ def generate_page(from_path, template_path, dest_path):
             f.write(html)
 
 
-def generates_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generates_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for file in os.listdir(dir_path_content):
         source_path = os.path.join(dir_path_content, file)
         if os.path.isfile(source_path) and file.endswith(".md"):
             html_filename = file.replace(".md", ".html")
             dest_path = os.path.join(dest_dir_path, html_filename)
             print(f"Markdown found: {source_path}")
-            generate_page(source_path, template_path, dest_path)
+            generate_page(source_path, template_path, dest_path, basepath)
         if not os.path.isfile(source_path):
             new_dest = os.path.join(dest_dir_path, file)
-            generates_pages_recursive(source_path, template_path, new_dest)
+            generates_pages_recursive(source_path, template_path, new_dest, basepath)
+
 
 def main():
-    copy_files("static", "public")
-    generates_pages_recursive("content", "template.html", "public")
-    # generate_page("content/index.md", "template.html", "public/index.html")
-    # generate_page("content/blog/glorfindel/index.md", "template.html", "public/blog/glorfindel/index.html")
-    # generate_page("content/blog/tom/index.md", "template.html", "public/blog/tom/index.html")
-    # generate_page("content/blog/majesty/index.md", "template.html", "public/blog/majesty/index.html")
-    # generate_page("content/contact/index.md", "template.html", "public/contact/index.html") 
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
+    copy_files("static", "docs")
+    generates_pages_recursive("content", "template.html", "docs", basepath)
+
 
 if __name__ == "__main__":
     main()
