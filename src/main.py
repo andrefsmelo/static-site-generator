@@ -34,9 +34,27 @@ def generate_page(from_path, template_path, dest_path):
     with open(dest_path, "w", encoding="utf-8") as f:
             f.write(html)
 
+
+def generates_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for file in os.listdir(dir_path_content):
+        source_path = os.path.join(dir_path_content, file)
+        if os.path.isfile(source_path) and file.endswith(".md"):
+            html_filename = file.replace(".md", ".html")
+            dest_path = os.path.join(dest_dir_path, html_filename)
+            print(f"Markdown found: {source_path}")
+            generate_page(source_path, template_path, dest_path)
+        if not os.path.isfile(source_path):
+            new_dest = os.path.join(dest_dir_path, file)
+            generates_pages_recursive(source_path, template_path, new_dest)
+
 def main():
     copy_files("static", "public")
-    generate_page("content", "template.html", "public")    
+    generates_pages_recursive("content", "template.html", "public")
+    # generate_page("content/index.md", "template.html", "public/index.html")
+    # generate_page("content/blog/glorfindel/index.md", "template.html", "public/blog/glorfindel/index.html")
+    # generate_page("content/blog/tom/index.md", "template.html", "public/blog/tom/index.html")
+    # generate_page("content/blog/majesty/index.md", "template.html", "public/blog/majesty/index.html")
+    # generate_page("content/contact/index.md", "template.html", "public/contact/index.html") 
 
 if __name__ == "__main__":
     main()
