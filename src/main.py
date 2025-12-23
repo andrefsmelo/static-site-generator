@@ -36,7 +36,7 @@ def generate_page(from_path, template_path, dest_path):
 
 def main():
     copy_files("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")    
+    generate_page("content", "template.html", "public")    
 
 if __name__ == "__main__":
     main()
